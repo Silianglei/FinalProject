@@ -16,15 +16,12 @@ For The Win (based on Art of Problem Solving’s version https://artofproblemsol
 ### Systems Concepts used:
 #### Networking
 Networking will be used to allow for multiple players to be playing at once.
-#### Shared memory
-To retrieve answers we will have to use shared memory for the different clients.
 #### Allocating memory
 To keep track of important data (score, responses, etc.), we will need to implement allocating memory.
 #### Working with files
 In order to save or edit data, we may need to work with files
-#### Signals
-We would need signals to block certain responses when players aren't allowed to answer a question (like after time runs out or when they already submitted)
-
+#### Working with processes
+Each player will have a shell to answer questions that is usually running and a new process when a question is active. I.e. each new question would be a new process while the main process stalls.
 ### Algorithms and/or data structures used
 #### Data structures
 Structs for questions (text and answer are 2 different values)  
