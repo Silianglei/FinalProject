@@ -13,14 +13,16 @@ For The Win (based on Art of Problem Solving’s version https://artofproblemsol
 
 ## Technical Design:
 
-## Systems Concepts used:
-### Networking
+### Systems Concepts used:
+#### Networking
 Networking will be used to allow for multiple players to be playing at once.
-### Shared memory
+#### Shared memory
 To retrieve answers we will have to use shared memory for the different clients.
-### Allocating memory
-### Working with files.
-### Processes
-### Maybe signals but not sure
+#### Allocating memory
+#### Working with files.
+#### Processes
+#### Maybe signals but not sure
+
+### Algorithms and/or data structures used
 
 ## Timeline
