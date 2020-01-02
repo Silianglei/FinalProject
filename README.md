@@ -36,9 +36,9 @@ We will have a formula for calculating elo or rating stolen from https://en.wiki
 ## Timeline
 ### 1/5
 Create all necessary files (main, headers, makefile). Define the structs for questions
-and players. Allow users to input their names.
+and players. Allow users to input their names. Determine sorting alogrithm to keep track of scores.
 ### 1/10
-Set up networking between computers. Set up shared memory between different users.
+Set up networking between computers. Set up shared memory between different users. Set up signals to block users when necessary.
 ### 1/13
 Write the math problems to be used for the game. Display solutions after each round.
 ### 1/15
