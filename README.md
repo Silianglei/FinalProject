@@ -21,7 +21,7 @@ To keep track of important data (score, responses, etc.), we will need to implem
 #### Working with files
 In order to save or edit data, we may need to work with files
 #### Working with processes
-Each player will have a shell to answer questions that is usually running and a new process when a question is active. I.e. each new question would be a new process while the main process stalls.
+Each player will have a process running that keeps track of scores and other players. Additionally there is a new process whenever a question is active. I.e. each new question would be a new process while the main process stalls.
 ### Algorithms and/or data structures used
 #### Data structures
 Structs for questions (text and answer are 2 different values)  
