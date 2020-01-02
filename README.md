@@ -34,3 +34,14 @@ We will have a simple sorting algorithm for keeping track of who is in the lead
 We will have a formula for calculating elo or rating stolen from https://en.wikipedia.org/wiki/Elo_rating_system
 
 ## Timeline
+# 1/5
+Create all necessary files (main, headers, makefile). Define the structs for questions
+and players. Allow users to input their names.
+# 1/10
+Set up networking between computers. Set up shared memory between different users.
+# 1/13
+Write the math problems to be used for the game. Display solutions after each round.
+# 1/15
+Test project with three players playing the game. Determine any bugs and if there are any, attempt to fix them.
+# 1/17
+Final Project Due
