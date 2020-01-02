@@ -21,7 +21,7 @@ To retrieve answers we will have to use shared memory for the different clients.
 #### Allocating memory
 To keep track of important data (score, responses, etc.), we will need to implement allocating memory.
 #### Working with files
-#### Processes
+In order to save or edit data, we may need to work with files
 #### Signals
 We would need signals to block certain responses when players aren't allowed to answer a question (like after time runs out or when they already submitted)
 
