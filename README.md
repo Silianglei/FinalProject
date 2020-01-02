@@ -22,3 +22,5 @@ To retrieve answers we will have to use shared memory for the different clients.
 ### Working with files.
 ### Processes
 ### Maybe signals but not sure
+
+## Timeline
