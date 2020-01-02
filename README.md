@@ -19,7 +19,7 @@ Networking will be used to allow for multiple players to be playing at once.
 #### Shared memory
 To retrieve answers we will have to use shared memory for the different clients.
 #### Allocating memory
-#### Working with files.
+#### Working with files
 #### Processes
 #### Maybe signals but not sure
 
@@ -28,7 +28,7 @@ To retrieve answers we will have to use shared memory for the different clients.
 Structs for questions (text and answer are 2 different values)
 Structs for players (Will have username, elo)
 #### Algorithms
-We will have a simple sorting algorithm for keeping track of who is in the lead
+We will have a simple sorting algorithm for keeping track of who is in the lead  
 We will have a formula for calculating elo or rating stolen from https://en.wikipedia.org/wiki/Elo_rating_system
 
 ## Timeline
