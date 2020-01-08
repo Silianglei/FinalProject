@@ -20,12 +20,12 @@ int submit(struct Player * p, struct Question * q, int answer, int questionNum){
   return 0; // returns 0 if wrong
 }
 
-void sortPlayer(struct Player ** playerRankings){
+void sortPlayer(struct Player ** playerRankings, int numPlayers){
   int i, swap;
   struct Player temp;
   while(1){
     swap = 0;
-    for(i=0; i<3; i++){
+    for(i=0; i<numPlayers; i++){
       if(playerRankings[i]->score < playerRankings[i+1]->score){
         temp = playerRankings[i];
         playerRankings[i] = playerRankings[i+1];
