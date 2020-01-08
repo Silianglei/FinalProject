@@ -15,7 +15,7 @@ int submit(struct Player * p, struct Question * q, int answer, int questionNum){
   if (answer == q->correctAnswer){
     int points = q->points;
     increaseScore(p, points);
-    return points;
+    return points; //returns number of points if right
   }
-  return 0;
+  return 0; // returns 0 if wrong
 }

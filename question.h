@@ -14,5 +14,5 @@ struct Question
 {
   char * problemText;
   int correctAnswer;
-  int points;
+  int points; //point value of the question
 };
