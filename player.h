@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include <dirent.h>
+#include "question.h"
 
 
 struct Player
@@ -20,3 +21,4 @@ struct Player
 
 void increaseScore(struct Player * p, int increase);
 void increaseRating(struct Player * p, int increase);
+int submit(struct Player * p, struct Question * q, int answer, int questionNum);
