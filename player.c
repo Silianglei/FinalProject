@@ -30,6 +30,7 @@ void sortPlayer(struct Player ** playerRankings){
         temp = playerRankings[i];
         playerRankings[i] = playerRankings[i+1];
         playerRankings[i+1] = temp;
+        swap =1;
       }
     }
     if (swap == 0){
