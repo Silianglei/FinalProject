@@ -1,21 +1,34 @@
-all: server.o player.o question.o
-	gcc -o program server.o player.o question.o
+forking: player fserver
 
-client.o: client.c
-	gcc -c client.c
+select: splayer sserver
 
-server.o: server.c server.h
-	gcc -c server.c
+sserver: select_server.o networking.o
+	gcc -o server select_server.o networking.o
 
-player.o: player.c player.h
+fserver: forking_server.o networking.o
+	gcc -o server forking_server.o networking.o
+
+splayer: select_client.o networking.o
+	gcc -o player select_client.o networking.o
+
+player: player.o networking.o
+	gcc -o player player.o networking.o
+
+select_client.o: select_client.c networking.h
+	gcc -c select_client.c
+
+player.o: player.c networking.h
 	gcc -c player.c
 
-question.o: question.c question.h
-	gcc -c question.c
+select_server.o: select_server.c networking.h
+	gcc -c select_server.c
 
-run:
-	./program
+forking_server.o: forking_server.c networking.h
+	gcc -c forking_server.c
+
+networking.o: networking.c networking.h
+	gcc -c networking.c
 
 clean:
 	rm *.o
-	rm program
+	rm *~
