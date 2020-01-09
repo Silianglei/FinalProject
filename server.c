@@ -3,22 +3,22 @@
 void process(char *s);
 void subserver(int from_client);
 
-int main() {
-
-  int listen_socket;
-  int f;
-  listen_socket = server_setup();
-
-  while (1) {
-
-    int client_socket = server_connect(listen_socket);
-    f = fork();
-    if (f == 0)
-      subserver(client_socket);
-    else
-      close(client_socket);
-  }
-}
+// int main() {
+//
+//   int listen_socket;
+//   int f;
+//   listen_socket = server_setup();
+//
+//   while (1) {
+// 
+//     int client_socket = server_connect(listen_socket);
+//     f = fork();
+//     if (f == 0)
+//       subserver(client_socket);
+//     else
+//       close(client_socket);
+//   }
+// }
 
 void subserver(int client_socket) {
   char buffer[BUFFER_SIZE];

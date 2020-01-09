@@ -39,6 +39,15 @@ void sortPlayer(struct Player * playerRankings, int numPlayers){
   }
 }
 
+void printPlayers(struct Player * playerRankings, int numPlayers) {
+  sortPlayer(playerRankings, numPlayers);
+  int i = 0;
+  while(i < numPlayers){
+    printf("%d. %s: %d\n", i, playerRankings[i].username, playerRankings[i].score);
+    i++;
+  }
+}
+
 
 int main(int argc, char **argv) {
 
@@ -59,4 +68,3 @@ int main(int argc, char **argv) {
     printf("received: [%s]\n", buffer);
   }
 }
-
