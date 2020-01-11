@@ -13,8 +13,13 @@ int main() {
 
   //set of file descriptors to read from
   fd_set read_fds;
-
+  char howManyPlayers[BUFFER_SIZE];
+  printf("How many players: ");
+  fgets(howManyPlayers, sizeof(howManyPlayers), stdin);
+  printf("Number of players is: %s\n", howManyPlayers);
   listen_socket = server_setup();
+
+
 
   while (1) {
 
