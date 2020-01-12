@@ -16,6 +16,7 @@ int main() {
 
   //Obtains number of Players
   char howManyPlayers[BUFFER_SIZE];
+
   printf("How many players: ");
   fgets(howManyPlayers, sizeof(howManyPlayers), stdin);
   int numPlayers;
@@ -63,6 +64,9 @@ void subserver(int client_socket) {
   char buffer[BUFFER_SIZE];
 
   //for testing client select statement
+  strncpy(buffer, "Welcome to For the Win! Compete to Solve Math Problems!", sizeof(buffer));
+  write(client_socket, buffer, sizeof(buffer));
+
   strncpy(buffer, "What is 2+2?", sizeof(buffer));
   write(client_socket, buffer, sizeof(buffer));
 
