@@ -1,12 +1,14 @@
 #include "networking.h"
 #include <string.h>
 void process(char *s);
-void subserver(int from_client);
+void stall(int from_client);
+void readyMsg(int client_socket);
+void game(int * from_client, int numPlayers);
+
 
 int main() {
 
   int listen_socket;
-  int client_socket;
   int f;
   int subserver_count = 0;
   char buffer[BUFFER_SIZE];
@@ -22,12 +24,13 @@ int main() {
   int numPlayers;
   sscanf(howManyPlayers, "%d", &numPlayers);
   printf("Number of players is: %d\n", numPlayers);
-
+  int * client_sockets = malloc(numPlayers *sizeof(int));
   listen_socket = server_setup();
 
 
 
-  while (1) {
+  while (subserver_count<numPlayers) {
+
     //select() modifies read_fds
     //we must reset it at each iteration
     FD_ZERO(&read_fds); //0 out fd set
@@ -39,44 +42,72 @@ int main() {
 
     //if listen_socket triggered select
     if (FD_ISSET(listen_socket, &read_fds)) {
-     client_socket = server_connect(listen_socket);
 
-     f = fork();
-     if (f == 0)
-       subserver(client_socket);
-     else {
-       subserver_count++;
-       close(client_socket);
-     }
+     client_sockets[subserver_count] = server_connect(listen_socket);
+     stall(client_sockets[subserver_count]);
+     subserver_count++;
+
+
     }//end listen_socket select
+    //while(1){
 
-    //if stdin triggered select
-    if (FD_ISSET(STDIN_FILENO, &read_fds)) {
-      //if you don't read from stdin, it will continue to trigger select()
-      fgets(buffer, sizeof(buffer), stdin);
-      printf("[server] subserver count: %d\n", subserver_count);
-    }//end stdin select
+    //}
   }
+  int i;
+  for(i=0;i<numPlayers;i++){
+    int client_socket=client_sockets[i];
+    readyMsg(client_socket);
+  }
+  game(client_sockets,numPlayers);
 }
 
-void subserver(int client_socket) {
+void stall(int client_socket) {
   char buffer[BUFFER_SIZE];
-
-  //for testing client select statement
-  strncpy(buffer, "Welcome to For the Win! Compete to Solve Math Problems!", sizeof(buffer));
+  strncpy(buffer, "Welcome to For the Win! Compete to Solve Math Problems! We are waiting for players to join.", sizeof(buffer));
   write(client_socket, buffer, sizeof(buffer));
+}
 
-  strncpy(buffer, "What is 2+2?", sizeof(buffer));
+void readyMsg(int client_socket) {
+  char buffer[BUFFER_SIZE];
+  strncpy(buffer, "The game is starting. Here is the first question:", sizeof(buffer));
   write(client_socket, buffer, sizeof(buffer));
+}
 
-  while (read(client_socket, buffer, sizeof(buffer))) {
-
-    printf("[subserver %d] received: [%s]\n", getpid(), buffer);
-    process(buffer);
+void game(int * client_sockets, int numPlayers) {
+  int i;
+  for(i=0;i<numPlayers;i++){
+    char buffer[BUFFER_SIZE];
+    int client_socket=client_sockets[i];
+    strncpy(buffer, "What is 2+2?", sizeof(buffer));
     write(client_socket, buffer, sizeof(buffer));
-  }//end read loop
-  close(client_socket);
-  exit(0);
+  }
+  char * new = malloc(sizeof(char) * numPlayers);
+  for(i=0;i<numPlayers;i++){
+    new[i]=0;
+  }
+  char rightMsg[200] = "  got it right";
+  while(1){
+    for(i=0;i<numPlayers;i++){
+      char buffer[BUFFER_SIZE];
+      int client_socket=client_sockets[i];
+      if(new[i]){
+        strncpy(buffer, rightMsg, sizeof(buffer));
+        write(client_socket, buffer, sizeof(buffer));
+        strncpy(buffer, "What is 2+2?", sizeof(buffer));
+        write(client_socket, buffer, sizeof(buffer));
+        new[i] = 0;
+      }
+      if(read(client_socket, buffer, sizeof(buffer))) {
+        if(!strcmp(buffer,"4")){
+          rightMsg[0] = i + '0';
+          int j;
+          for(j=0;j<numPlayers;j++){
+            new[j]=1;
+          }
+        }
+      }
+    }
+  }
 }
 
 void process(char * s) {
