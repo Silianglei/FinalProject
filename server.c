@@ -28,7 +28,6 @@ int main() {
 
 
   while (1) {
-    printf("hello\n");
     //select() modifies read_fds
     //we must reset it at each iteration
     FD_ZERO(&read_fds); //0 out fd set
