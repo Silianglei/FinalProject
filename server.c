@@ -1,5 +1,6 @@
 #include "networking.h"
 #include <string.h>
+#include <sys/ioctl.h>
 void process(char *s);
 void stall(int from_client);
 void readyMsg(int client_socket);
@@ -81,23 +82,25 @@ void game(int * client_sockets, int numPlayers) {
     strncpy(buffer, "What is 2+2?", sizeof(buffer));
     write(client_socket, buffer, sizeof(buffer));
   }
-  char * new = malloc(sizeof(char) * numPlayers);
-  for(i=0;i<numPlayers;i++){
-    new[i]=0;
-  }
+  int * new = malloc(sizeof(int) * numPlayers);
   char rightMsg[200] = "  got it right";
   while(1){
     for(i=0;i<numPlayers;i++){
       char buffer[BUFFER_SIZE];
       int client_socket=client_sockets[i];
       if(new[i]){
+        //printf("We need to write to process %d\n",i);
         strncpy(buffer, rightMsg, sizeof(buffer));
         write(client_socket, buffer, sizeof(buffer));
         strncpy(buffer, "What is 2+2?", sizeof(buffer));
         write(client_socket, buffer, sizeof(buffer));
+        int j;
         new[i] = 0;
       }
-      if(read(client_socket, buffer, sizeof(buffer))) {
+      int len = 0;
+      ioctl(client_socket, FIONREAD, &len); //checks if stuff to read exists
+      if(len) {
+        read(client_socket, buffer, sizeof(buffer));
         if(!strcmp(buffer,"4")){
           rightMsg[0] = i + '0';
           int j;
