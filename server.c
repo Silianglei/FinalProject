@@ -52,7 +52,6 @@ int main() {
   struct Question questions[4];
 
   for (index = 0; index < 4; index++){
-    printf("%s\n", array[index]);
     questions[index] = makeQuestion(array[index]);
   }
 
