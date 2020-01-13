@@ -8,7 +8,7 @@
 void process(char *s);
 void stall(int from_client);
 void readyMsg(int client_socket);
-void game(int * from_client, int numPlayers, struct Question questions[]);
+void game(int * from_client, int numPlayers, struct Question questions[], int numQuestions);
 
 
 int main() {
@@ -43,16 +43,18 @@ int main() {
 
   int index = 0;
   char *p = strtok (text, "\n");
-  char *array[4];
+  char *array[100];
 
   while (p != NULL) {
       array[index++] = p;
       p = strtok (NULL, "\n");
   }
-  struct Question questions[4];
 
-  for (index = 0; index < 4; index++){
-    questions[index] = makeQuestion(array[index]);
+  struct Question questions[index];
+
+  int q;
+  for (q = 0; q < index; q++){
+    questions[q] = makeQuestion(array[q]);
   }
 
 
@@ -85,7 +87,7 @@ int main() {
     int client_socket=client_sockets[i];
     readyMsg(client_socket);
   }
-  game(client_sockets,numPlayers, questions);
+  game(client_sockets,numPlayers, questions, index);
 }
 
 void stall(int client_socket) {
@@ -100,7 +102,7 @@ void readyMsg(int client_socket) {
   write(client_socket, buffer, sizeof(buffer));
 }
 
-void game(int * client_sockets, int numPlayers, struct Question questions[]) {
+void game(int * client_sockets, int numPlayers, struct Question questions[], int numQuestions) {
   int i;
   int questionIndex = 0;
   for(i=0;i<numPlayers;i++){
@@ -110,7 +112,7 @@ void game(int * client_sockets, int numPlayers, struct Question questions[]) {
     write(client_socket, buffer, sizeof(buffer));
   }
   int * new = malloc(sizeof(int) * numPlayers);
-  char rightMsg[200] = "  got it right";
+  char  rightMsg[200] = "  got it right";
   while(1){
     for(i=0;i<numPlayers;i++){
       char buffer[BUFFER_SIZE];
@@ -121,7 +123,7 @@ void game(int * client_sockets, int numPlayers, struct Question questions[]) {
         write(client_socket, buffer, sizeof(buffer));
         //strncpy(buffer, "What is 2+2?", sizeof(buffer));
         srand(time(0));
-        questionIndex = rand() % 4;
+        questionIndex = rand() % numQuestions;
         strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
         write(client_socket, buffer, sizeof(buffer));
         int j;
