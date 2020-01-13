@@ -13,6 +13,8 @@
 struct Question
 {
   char * problemText;
-  int correctAnswer;
+  char * correctAnswer;
   int points; //point value of the question
 };
+
+struct Question makeQuestion(char* someString);

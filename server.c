@@ -1,10 +1,14 @@
 #include "networking.h"
 #include <string.h>
 #include <sys/ioctl.h>
+#include <fcntl.h>
+#include "question.h"
+#include <time.h>
+
 void process(char *s);
 void stall(int from_client);
 void readyMsg(int client_socket);
-void game(int * from_client, int numPlayers);
+void game(int * from_client, int numPlayers, struct Question questions[]);
 
 
 int main() {
@@ -28,6 +32,29 @@ int main() {
   int * client_sockets = malloc(numPlayers *sizeof(int));
   listen_socket = server_setup();
 
+  int file = open("question.csv", O_RDONLY);
+  char text[1000];
+  text[0] = '\0';
+  read(file, text, 1000);
+  if (strlen(text) > 0) {
+    *(strrchr(text, '\n')+1) = '\0';
+  }
+  close(file);
+
+  int index = 0;
+  char *p = strtok (text, "\n");
+  char *array[4];
+
+  while (p != NULL) {
+      array[index++] = p;
+      p = strtok (NULL, "\n");
+  }
+  struct Question questions[4];
+
+  for (index = 0; index < 4; index++){
+    printf("%s\n", array[index]);
+    questions[index] = makeQuestion(array[index]);
+  }
 
 
   while (subserver_count<numPlayers) {
@@ -59,7 +86,7 @@ int main() {
     int client_socket=client_sockets[i];
     readyMsg(client_socket);
   }
-  game(client_sockets,numPlayers);
+  game(client_sockets,numPlayers, questions);
 }
 
 void stall(int client_socket) {
@@ -74,12 +101,13 @@ void readyMsg(int client_socket) {
   write(client_socket, buffer, sizeof(buffer));
 }
 
-void game(int * client_sockets, int numPlayers) {
+void game(int * client_sockets, int numPlayers, struct Question questions[]) {
   int i;
+  int questionIndex = 0;
   for(i=0;i<numPlayers;i++){
     char buffer[BUFFER_SIZE];
     int client_socket=client_sockets[i];
-    strncpy(buffer, "What is 2+2?", sizeof(buffer));
+    strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
     write(client_socket, buffer, sizeof(buffer));
   }
   int * new = malloc(sizeof(int) * numPlayers);
@@ -92,7 +120,10 @@ void game(int * client_sockets, int numPlayers) {
         //printf("We need to write to process %d\n",i);
         strncpy(buffer, rightMsg, sizeof(buffer));
         write(client_socket, buffer, sizeof(buffer));
-        strncpy(buffer, "What is 2+2?", sizeof(buffer));
+        //strncpy(buffer, "What is 2+2?", sizeof(buffer));
+        srand(time(0));
+        questionIndex = rand() % 4;
+        strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
         write(client_socket, buffer, sizeof(buffer));
         int j;
         new[i] = 0;
@@ -101,7 +132,7 @@ void game(int * client_sockets, int numPlayers) {
       ioctl(client_socket, FIONREAD, &len); //checks if stuff to read exists
       if(len) {
         read(client_socket, buffer, sizeof(buffer));
-        if(!strcmp(buffer,"4")){
+        if(!strcmp(buffer,questions[questionIndex].correctAnswer)){
           rightMsg[0] = i + '0';
           int j;
           for(j=0;j<numPlayers;j++){
