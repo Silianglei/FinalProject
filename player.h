@@ -13,7 +13,7 @@
 
 struct Player
 {
-  char * username;
+  char username[512];
   int score;
   int rating;
   int answers[100]; //answers submitted

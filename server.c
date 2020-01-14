@@ -6,7 +6,7 @@
 #include "player.h"
 
 void process(char *s);
-void stall(int from_client);
+void getUser(struct Player *p);
 void readyMsg(int client_socket);
 void game(struct Player * players, int numPlayers, struct Question questions[], int numQuestions);
 
@@ -76,10 +76,9 @@ int main() {
      // client_sockets[subserver_count] = server_connect(listen_socket);
      struct Player newPlayer;
      newPlayer.socket = server_connect(listen_socket);
-     newPlayer.username = "Akash";
      players[subserver_count] = newPlayer;
      // stall(client_sockets[subserver_count]);
-     stall(players[subserver_count].socket);
+     getUser(&players[subserver_count]);
      subserver_count++;
 
 
@@ -98,10 +97,20 @@ int main() {
   game(players,numPlayers, questions, index);
 }
 
-void stall(int client_socket) {
+void getUser(struct Player *player) {
   char buffer[BUFFER_SIZE];
-  strncpy(buffer, "Welcome to For the Win! Compete to Solve Math Problems! We are waiting for players to join.", sizeof(buffer));
-  write(client_socket, buffer, sizeof(buffer));
+  strncpy(buffer, "Welcome to For the Win! Compete to Solve Math Problems! We are waiting for players to join. \nIn the meantime, what is your username?", sizeof(buffer));
+  write(player->socket, buffer, sizeof(buffer));
+  while(1){
+    int len = 0;
+    ioctl(player->socket, FIONREAD, &len); //checks if stuff to read exists
+    if(len) {
+      read(player->socket, buffer, sizeof(buffer));
+      strcpy(player->username,buffer);
+      printf("%s\n",player->username);
+      return;
+    }
+  }
 }
 
 void readyMsg(int client_socket) {
@@ -122,8 +131,9 @@ void readyMsg(int client_socket) {
     write(client_socket, buffer, sizeof(buffer));
   }
   int * new = malloc(sizeof(int) * numPlayers);
-  char  rightMsg[200] = "Solved By ";
+
   while(1){
+    char  rightMsg[200] = "Solved By ";
     for(i=0;i<numPlayers;i++){
       char buffer[BUFFER_SIZE];
       // int client_socket=client_sockets[i];
