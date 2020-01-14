@@ -12,7 +12,10 @@ void increaseRating(struct Player * p, int increase){
 int submit(struct Player * p, struct Question * q, int answer, int questionNum){
 
   p->answers[questionNum - 1] = answer;
-  if (answer == q->correctAnswer){
+
+  char snum[20];
+  snprintf( snum, 20, "%d", answer );
+  if (!strcmp(snum,q->correctAnswer)){
     int points = q->points;
     increaseScore(p, points);
     return points; //returns number of points if right
