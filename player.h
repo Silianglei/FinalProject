@@ -17,6 +17,8 @@ struct Player
   int score;
   int rating;
   int answers[100]; //answers submitted
+
+  int socket;
 };
 
 void increaseScore(struct Player * p, int increase);

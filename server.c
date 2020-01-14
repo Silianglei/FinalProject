@@ -2,13 +2,13 @@
 #include <string.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
-#include "question.h"
 #include <time.h>
+#include "player.h"
 
 void process(char *s);
 void stall(int from_client);
 void readyMsg(int client_socket);
-void game(int * from_client, int numPlayers, struct Question questions[], int numQuestions);
+void game(struct Player * players, int numPlayers, struct Question questions[], int numQuestions);
 
 
 int main() {
@@ -29,7 +29,8 @@ int main() {
   int numPlayers;
   sscanf(howManyPlayers, "%d", &numPlayers);
   printf("Number of players is: %d\n", numPlayers);
-  int * client_sockets = malloc(numPlayers *sizeof(int));
+  // int * client_sockets = malloc(numPlayers *sizeof(int));
+  struct Player * players = malloc(numPlayers * sizeof(struct Player));
   listen_socket = server_setup();
 
   int file = open("question.csv", O_RDONLY);
@@ -72,8 +73,13 @@ int main() {
     //if listen_socket triggered select
     if (FD_ISSET(listen_socket, &read_fds)) {
 
-     client_sockets[subserver_count] = server_connect(listen_socket);
-     stall(client_sockets[subserver_count]);
+     // client_sockets[subserver_count] = server_connect(listen_socket);
+     struct Player newPlayer;
+     newPlayer.socket = server_connect(listen_socket);
+     newPlayer.username = "Akash";
+     players[subserver_count] = newPlayer;
+     // stall(client_sockets[subserver_count]);
+     stall(players[subserver_count].socket);
      subserver_count++;
 
 
@@ -84,10 +90,12 @@ int main() {
   }
   int i;
   for(i=0;i<numPlayers;i++){
-    int client_socket=client_sockets[i];
+    // int client_socket=client_sockets[i];
+    int client_socket=players[i].socket;
     readyMsg(client_socket);
   }
-  game(client_sockets,numPlayers, questions, index);
+  // game(client_sockets,numPlayers, questions, index);
+  game(players,numPlayers, questions, index);
 }
 
 void stall(int client_socket) {
@@ -102,12 +110,14 @@ void readyMsg(int client_socket) {
   write(client_socket, buffer, sizeof(buffer));
 }
 
-void game(int * client_sockets, int numPlayers, struct Question questions[], int numQuestions) {
+// void game(int * client_sockets, int numPlayers, struct Question questions[], int numQuestions) {
+  void game(struct Player * players, int numPlayers, struct Question questions[], int numQuestions) {
   int i;
   int questionIndex = 0;
   for(i=0;i<numPlayers;i++){
     char buffer[BUFFER_SIZE];
-    int client_socket=client_sockets[i];
+    // int client_socket=client_sockets[i];
+    int client_socket=players[i].socket;
     strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
     write(client_socket, buffer, sizeof(buffer));
   }
@@ -116,7 +126,8 @@ void game(int * client_sockets, int numPlayers, struct Question questions[], int
   while(1){
     for(i=0;i<numPlayers;i++){
       char buffer[BUFFER_SIZE];
-      int client_socket=client_sockets[i];
+      // int client_socket=client_sockets[i];
+      int client_socket=players[i].socket;
       if(new[i]){
         //printf("We need to write to process %d\n",i);
         strncpy(buffer, rightMsg, sizeof(buffer));
@@ -134,6 +145,7 @@ void game(int * client_sockets, int numPlayers, struct Question questions[], int
       if(len) {
         read(client_socket, buffer, sizeof(buffer));
         if(!strcmp(buffer,questions[questionIndex].correctAnswer)){
+          // rightMsg[0] = players[i].username + '0';
           rightMsg[0] = i + '0';
           int j;
           for(j=0;j<numPlayers;j++){
