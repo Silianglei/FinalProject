@@ -122,7 +122,7 @@ void readyMsg(int client_socket) {
     write(client_socket, buffer, sizeof(buffer));
   }
   int * new = malloc(sizeof(int) * numPlayers);
-  char  rightMsg[200] = "  got it right";
+  char  rightMsg[200] = "Solved By ";
   while(1){
     for(i=0;i<numPlayers;i++){
       char buffer[BUFFER_SIZE];
