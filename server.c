@@ -146,7 +146,8 @@ void readyMsg(int client_socket) {
         read(client_socket, buffer, sizeof(buffer));
         if(!strcmp(buffer,questions[questionIndex].correctAnswer)){
           // rightMsg[0] = players[i].username + '0';
-          rightMsg[0] = i + '0';
+          strncat(rightMsg, players[i].username, 10);
+          // rightMsg[0] = i + '0';
           int j;
           for(j=0;j<numPlayers;j++){
             new[j]=1;
