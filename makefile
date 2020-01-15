@@ -9,7 +9,7 @@ player: player.o networking.o
 player.o: player.c networking.h
 	gcc -c player.c
 
-server.o: server.c networking.h question.h
+server.o: server.c networking.h question.h player.h
 	gcc -c server.c
 
 networking.o: networking.c networking.h

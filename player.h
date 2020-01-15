@@ -21,7 +21,8 @@ struct Player
   int socket;
 };
 
+// char * printPlayers(struct Player * playerRankings, int numPlayers);
 void increaseScore(struct Player * p, int increase);
 void increaseRating(struct Player * p, int increase);
 int submit(struct Player * p, struct Question * q, int answer, int questionNum);
-void sortPlayer(struct Player * playerRankings, int numPlayers);
+// void sortPlayer(struct Player * playerRankings, int numPlayers);

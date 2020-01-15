@@ -11,6 +11,40 @@ void readyMsg(int client_socket);
 void game(struct Player * players, int numPlayers, struct Question questions[], int numQuestions);
 
 
+void sortPlayer(struct Player * playerRankings, int numPlayers){
+  int i, swap;
+  struct Player temp;
+  while(1){
+    swap = 0;
+    for(i=0; i<numPlayers; i++){
+      if(playerRankings[i].score < playerRankings[i+1].score){
+        temp = playerRankings[i];
+        playerRankings[i] = playerRankings[i+1];
+        playerRankings[i+1] = temp;
+        swap =1;
+      }
+    }
+    if (swap == 0){
+      break;
+    }
+  }
+}
+
+char * printPlayers(struct Player * playerRankings, int numPlayers) {
+  sortPlayer(playerRankings, numPlayers);
+  char total[512];
+  strcpy(total,"\n");
+  int i = 0;
+  while(i < numPlayers){
+    char info[50];
+    sprintf(info, "%d. %s: %d\n", i+1, playerRankings[i].username, playerRankings[i].score);
+    strcat(total,info);
+    i++;
+  }
+  // printf("%s", total);
+  return total;
+}
+
 int main() {
 
   int listen_socket;
@@ -76,6 +110,7 @@ int main() {
      // client_sockets[subserver_count] = server_connect(listen_socket);
      struct Player newPlayer;
      newPlayer.socket = server_connect(listen_socket);
+     newPlayer.score = 0;
      players[subserver_count] = newPlayer;
      // stall(client_sockets[subserver_count]);
      getUser(&players[subserver_count]);
@@ -121,6 +156,7 @@ void readyMsg(int client_socket) {
 
 // void game(int * client_sockets, int numPlayers, struct Question questions[], int numQuestions) {
   void game(struct Player * players, int numPlayers, struct Question questions[], int numQuestions) {
+  srand(time(0));
   int i;
   int questionIndex = 0;
   for(i=0;i<numPlayers;i++){
@@ -143,11 +179,18 @@ void readyMsg(int client_socket) {
         //printf("We need to write to process %d\n",i);
         strncpy(buffer, rightMsg, sizeof(buffer));
         write(client_socket, buffer, sizeof(buffer));
+
+        char str[BUFFER_SIZE];
+        strcpy(str,printPlayers(players,numPlayers));
+        write(client_socket, str, sizeof(str));
+
         //strncpy(buffer, "What is 2+2?", sizeof(buffer));
-        srand(time(0));
-        questionIndex = rand() % numQuestions;
+
+        // questionIndex = rand() % numQuestions;
+
         strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
         write(client_socket, buffer, sizeof(buffer));
+
         int j;
         new[i] = 0;
       }
@@ -156,7 +199,9 @@ void readyMsg(int client_socket) {
       if(len) {
         read(client_socket, buffer, sizeof(buffer));
         if(!strcmp(buffer,questions[questionIndex].correctAnswer)){
+          questionIndex = rand() % numQuestions;
           // rightMsg[0] = players[i].username + '0';
+          players[i].score = players[i].score + 1;
           if(strlen(rightMsg)){
               rightMsg[0]='\0';
           }
