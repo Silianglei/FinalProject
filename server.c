@@ -131,9 +131,10 @@ void readyMsg(int client_socket) {
     write(client_socket, buffer, sizeof(buffer));
   }
   int * new = malloc(sizeof(int) * numPlayers);
-
+  char rightMsgStart[200] = "Solved By ";
+  char rightMsg[200];
   while(1){
-    char  rightMsg[200] = "Solved By ";
+
     for(i=0;i<numPlayers;i++){
       char buffer[BUFFER_SIZE];
       // int client_socket=client_sockets[i];
@@ -156,7 +157,13 @@ void readyMsg(int client_socket) {
         read(client_socket, buffer, sizeof(buffer));
         if(!strcmp(buffer,questions[questionIndex].correctAnswer)){
           // rightMsg[0] = players[i].username + '0';
-          strncat(rightMsg, players[i].username, 10);
+          if(strlen(rightMsg)){
+              rightMsg[0]='\0';
+          }
+          strcat(rightMsg , rightMsgStart);
+          strcat(rightMsg , players[i].username);
+
+
           // rightMsg[0] = i + '0';
           int j;
           for(j=0;j<numPlayers;j++){
