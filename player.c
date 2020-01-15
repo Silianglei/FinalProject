@@ -78,8 +78,6 @@ int main(int argc, char **argv) {
     server_socket = client_setup( TEST_IP );
 
   while (1) {
-
-    printf("enter data: ");
     //the above printf does not have \n
     //flush the buffer to immediately print
     fflush(stdout);
@@ -106,7 +104,7 @@ int main(int argc, char **argv) {
     //this would allow for broadcast messages
     if (FD_ISSET(server_socket, &read_fds)) {
       read(server_socket, buffer, sizeof(buffer));
-      printf("\r[SERVER BROADCAST] [%s]\n", buffer);
+      printf("\r %s \n", buffer);
       //the above printf does not have \n
       //flush the buffer to immediately print
       fflush(stdout);

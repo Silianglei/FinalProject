@@ -176,6 +176,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
 
   char rightMsgStart[200] = "Solved By ";
   char rightMsg[200];
+  int numIdiots = 0;
   while(1){
 
     for(i=0;i<numPlayers;i++){
@@ -185,9 +186,43 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
       ioctl(client_socket, FIONREAD, &len); //checks if stuff to read exists
       if(len) {
         read(client_socket, buffer, sizeof(buffer));
-        if(!strcmp(buffer,questions[questionIndex].correctAnswer)){
-          questionIndex = rand() % numQuestions;
+        if(strcmp(buffer,questions[questionIndex].correctAnswer)){
+          numIdiots++;
+          int j;
+          if(numIdiots>=numPlayers){
+            int k;
+            strncpy(buffer, "Everyone got it wrong, y'all stupid.", sizeof(buffer));
+            write(client_socket,buffer,sizeof(buffer));
+            for(k = 3 ;  k>0 ; k--){
+
+              char waitMessage[100];
+              sprintf(waitMessage, "\b\r%d seconds until the next round begins", k);
+              if(k==3){
+                sprintf(waitMessage, "\r%d seconds until the next round begins", k);
+              }
+
+              for(j=0;j<numPlayers;j++){
+                strncpy(buffer, waitMessage, sizeof(buffer));
+                write(players[j].socket, buffer, sizeof(buffer));
+              }
+              delay(1000);
+            }
+            questionIndex = rand() % numQuestions;
+            for(j = 0; j<numPlayers; j ++){
+              strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
+              write(players[j].socket, buffer, sizeof(buffer));
+            }
+          }
+          else{
+            strncpy(buffer, "You got it wrong. Wait for the round to end.", sizeof(buffer));
+            write(client_socket,buffer,sizeof(buffer));
+          }
+
+        }
+        else{
           players[i].score = players[i].score + questions[questionIndex].points;
+          questionIndex = rand() % numQuestions;
+          numIdiots = 0;
           if(strlen(rightMsg)){
               rightMsg[0]='\0';
           }
@@ -200,17 +235,23 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
             char str[BUFFER_SIZE];
             strcpy(str,printPlayers(players,numPlayers));
             write(players[j].socket, str, sizeof(str));
+          }
+          int k;
+          for(k = 3 ;  k>0 ; k--){
 
-            // int i = 0;
-            // for(i = 0 ;  i<10 ; i++){
-            //   delay(1000);
-            //   char * waitMessage = malloc(50);
-            //   sprintf(waitMessage, "\r%d seconds have passed", i + 1);
-            //   strncpy(buffer, waitMessage, sizeof(buffer));
-            //   write(players[j].socket, buffer, sizeof(buffer));
-            //   fflush(stdout);
-            // }
+            char waitMessage[100];
+            sprintf(waitMessage, "\b\r%d seconds until the next round begins", k);
+            if(k==3){
+              sprintf(waitMessage, "\r%d seconds until the next round begins", k);
+            }
+            for(j=0;j<numPlayers;j++){
+              strncpy(buffer, waitMessage, sizeof(buffer));
+              write(players[j].socket, buffer, sizeof(buffer));
+            }
+            delay(1000);
+          }
 
+          for(j = 0; j<numPlayers; j ++){
             strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
             write(players[j].socket, buffer, sizeof(buffer));
           }
@@ -219,3 +260,5 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
     }
   }
 }
+
+void nextQ(struct Player * players);
