@@ -187,7 +187,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
         read(client_socket, buffer, sizeof(buffer));
         if(!strcmp(buffer,questions[questionIndex].correctAnswer)){
           questionIndex = rand() % numQuestions;
-          players[i].score = players[i].score + 1;
+          players[i].score = players[i].score + questions[questionIndex].points;
           if(strlen(rightMsg)){
               rightMsg[0]='\0';
           }

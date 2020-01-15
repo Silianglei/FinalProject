@@ -20,4 +20,6 @@ question.o: question.c question.h
 
 clean:
 	rm *.o
+	rm server
+	rm player
 	rm *~
