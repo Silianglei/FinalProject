@@ -8,6 +8,7 @@
 void getUser(struct Player *p);
 void readyMsg(int client_socket);
 void game(struct Player * players, int numPlayers, struct Question questions[], int numQuestions);
+void delay(int numSec);
 
 
 void sortPlayer(struct Player * playerRankings, int numPlayers){
@@ -27,6 +28,13 @@ void sortPlayer(struct Player * playerRankings, int numPlayers){
       break;
     }
   }
+}
+
+void delay(int numSec){
+  int milli = 1000 * numSec;
+  clock_t start_time = clock();
+  while(clock() < start_time + milli)
+    ;
 }
 
 char * printPlayers(struct Player * playerRankings, int numPlayers) {
@@ -192,6 +200,17 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
             char str[BUFFER_SIZE];
             strcpy(str,printPlayers(players,numPlayers));
             write(players[j].socket, str, sizeof(str));
+
+            // int i = 0;
+            // for(i = 0 ;  i<10 ; i++){
+            //   delay(1000);
+            //   char * waitMessage = malloc(50);
+            //   sprintf(waitMessage, "\r%d seconds have passed", i + 1);
+            //   strncpy(buffer, waitMessage, sizeof(buffer));
+            //   write(players[j].socket, buffer, sizeof(buffer));
+            //   fflush(stdout);
+            // }
+
             strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
             write(players[j].socket, buffer, sizeof(buffer));
           }
@@ -200,4 +219,3 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
     }
   }
 }
-
