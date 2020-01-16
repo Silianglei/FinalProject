@@ -207,6 +207,12 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
               }
               delay(1000);
             }
+
+            for(j = 0; j<numPlayers; j ++){
+              strncpy(buffer, "clear ", sizeof(buffer));
+              write(players[j].socket, buffer, sizeof(buffer));
+            }
+
             questionIndex = rand() % numQuestions;
             for(j = 0; j<numPlayers; j ++){
               strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
@@ -251,6 +257,12 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
             }
             delay(1000);
           }
+
+          for(j = 0; j<numPlayers; j ++){
+            strncpy(buffer, "clear ", sizeof(buffer));
+            write(players[j].socket, buffer, sizeof(buffer));
+          }
+
 
           for(j = 0; j<numPlayers; j ++){
             strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
