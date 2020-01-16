@@ -212,6 +212,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
               strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
               write(players[j].socket, buffer, sizeof(buffer));
             }
+            numIdiots = 0;
           }
           else{
             strncpy(buffer, "You got it wrong. Wait for the round to end.", sizeof(buffer));
