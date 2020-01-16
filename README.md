@@ -11,7 +11,7 @@ For The Win is a game in which multiple people compete to solve math problems as
 
 
 
-##How to Use:
+## How to Use:
 1. Set up server on one computer/terminal by ```./server```
 2. Enter number of players playing when prompted, and click enter.
 3. Players may then join the game on their own computers by ```./player IP``` where ```IP``` is the IP address of the server.
@@ -20,14 +20,14 @@ For The Win is a game in which multiple people compete to solve math problems as
 6. The round is over when one player gets the correct answer or nobody gets the correct answer.
 7. At the end of each round, players can see the current rankings as well as who solved the question correctly.
 
-#Bugs (Right Now)
+# Bugs (Right Now)
 1. Sometimes, after a round, the message that says who solved the question is displayed twice.
 
 
 
 
 
-##Libraries Required:
+## Libraries Required:
 ```#include <stdio.h>```
 ```#include <stdlib.h>```
 ```#include <unistd.h>```
