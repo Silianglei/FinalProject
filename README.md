@@ -20,21 +20,17 @@ For The Win is a game in which multiple people compete to solve math problems as
 6. The round is over when one player gets the correct answer or nobody gets the correct answer.
 7. At the end of each round, players can see the current rankings as well as who solved the question correctly.
 
-# Bugs (Right Now)
+## Bugs (Right Now)
 1. Sometimes, after a round, the message that says who solved the question is displayed twice.
 
-
-
-
-
 ## Libraries Required:
-```#include <stdio.h>```
-```#include <stdlib.h>```
-```#include <unistd.h>```
-```#include <sys/types.h>```
-```#include <sys/socket.h>```
-```#include <netinet/in.h>```
-```#include <arpa/inet.h>```
-```#include <netdb.h>```
-```#include <string.h>```
-```#include <errno.h>```
+1. ```#include <stdio.h>```
+2. ```#include <stdlib.h>```
+3. ```#include <unistd.h>```
+4. ```#include <sys/types.h>```
+5. ```#include <sys/socket.h>```
+6. ```#include <netinet/in.h>```
+7. ```#include <arpa/inet.h>```
+8. ```#include <netdb.h>```
+9. ```#include <string.h>```
+10. ```#include <errno.h>```
