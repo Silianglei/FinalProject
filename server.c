@@ -44,7 +44,7 @@ char * printPlayers(struct Player * playerRankings, int numPlayers) {
   int i = 0;
   while(i < numPlayers){
     char * info = malloc(50);
-    sprintf(info, "%d. %s: %d\n", i+1, playerRankings[i].username, playerRankings[i].score);
+    sprintf(info, "%d. %s (%d): %d\n", i+1, playerRankings[i].username, playerRankings[i].rating, playerRankings[i].score);
     strcat(total,info);
     i++;
   }
@@ -118,6 +118,7 @@ int main() {
      struct Player newPlayer;
      newPlayer.socket = server_connect(listen_socket);
      newPlayer.score = 0;
+     newPlayer.rating = 1200;
      players[subserver_count] = newPlayer;
      // stall(client_sockets[subserver_count]);
      getUser(&players[subserver_count]);
@@ -175,7 +176,9 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
   }
 
   char rightMsgStart[200] = "Solved By ";
+  char answerMsgStart[200] = "The answer was ";
   char rightMsg[200];
+  char answerMsg[200];
   int numIdiots = 0;
   int endCounter = 0;
   while(1){
@@ -229,16 +232,24 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           }
           else{
             players[i].score = players[i].score + questions[questionIndex].points;
-            questionIndex = rand() % numQuestions;
+
             numIdiots = 0;
             if(strlen(rightMsg)){
                 rightMsg[0]='\0';
             }
+            if(strlen(answerMsg)){
+                answerMsg[0]='\0';
+            }
             strcat(rightMsg , rightMsgStart);
             strcat(rightMsg , players[i].username);
+            strcat(answerMsg , answerMsgStart);
+            strcat(answerMsg , questions[questionIndex].correctAnswer);
+            questionIndex = rand() % numQuestions;
             int j;
             for(j=0;j<numPlayers;j++){
               strncpy(buffer, rightMsg, sizeof(buffer));
+              write(players[j].socket, buffer, sizeof(buffer));
+              strncpy(buffer, answerMsg, sizeof(buffer));
               write(players[j].socket, buffer, sizeof(buffer));
               char str[BUFFER_SIZE];
               strcpy(str,printPlayers(players,numPlayers));
