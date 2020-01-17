@@ -150,7 +150,10 @@ void getUser(struct Player *player) {
     if(len) {
       read(player->socket, buffer, sizeof(buffer));
       strcpy(player->username,buffer);
+
+      lookUp(player);
       printf("%s\n",player->username);
+      printf("%d\n",player->rating);
       return;
     }
   }
