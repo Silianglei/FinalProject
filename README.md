@@ -34,3 +34,6 @@ For The Win is a game in which multiple people compete to solve math problems as
 8. ```#include <netdb.h>```
 9. ```#include <string.h>```
 10. ```#include <errno.h>```
+11. ```#include <sys/ioctl.h>```
+12. ```#include <fcntl.h>```
+13. ```#include <time.h>```
