@@ -44,8 +44,6 @@ void lookUp(struct Player * p) {
   char line[1024];
   while (fgets(line, 1024, stream))
   {
-
-      //printf("Comparing %s and %s \n",getfield(tmp, 1),p->username);
       char * t1 = strdup(line);
       if(!strcmp(p->username,getfield(strdup(line), 1))){
         char * t2 = strdup(line);
@@ -58,7 +56,13 @@ void lookUp(struct Player * p) {
       };
       free(t1);
   }
-  //close(stream);
+}
+
+void updateRatings(struct Player * p) {
+  char buffer[256];
+  FILE* pFile = fopen("players.csv", "a");
+  sprintf(buffer,"%s,%d \n",p->username,p->rating);
+  fprintf(pFile, "%s", buffer);
 }
 
 void increaseScore(struct Player * p, int increase);

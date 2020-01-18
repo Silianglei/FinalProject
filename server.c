@@ -296,6 +296,8 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           write(players[k].socket, buffer, sizeof(buffer));
         }
         for(i=0;i<numPlayers;i++){
+          players[i].rating+=players[i].score;
+          updateRatings(&players[i]);
           strncpy(endMsg, "The game has ended. Here are the final standings:", sizeof(endMsg));
           write(players[i].socket, endMsg, sizeof(endMsg));
           strcpy(endMsg,printPlayers(players,numPlayers));
