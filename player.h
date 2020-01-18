@@ -25,9 +25,9 @@ struct Player
 
 char * printPlayers(struct Player * playerRankings, int numPlayers);
 
-const char* getfield(char* line, int num)
+char* getfield(char* line, int num)
 {
-    const char* tok;
+    char* tok;
     for (tok = strtok(line, ",");
             tok && *tok;
             tok = strtok(NULL, ",\n"))
@@ -44,16 +44,19 @@ void lookUp(struct Player * p) {
   char line[1024];
   while (fgets(line, 1024, stream))
   {
-      char* tmp = strdup(line);
+
       //printf("Comparing %s and %s \n",getfield(tmp, 1),p->username);
-      if(!strcmp(p->username,getfield(tmp, 1))){
-        char * y = getfield(tmp, 1);
+      char * t1 = strdup(line);
+      if(!strcmp(p->username,getfield(strdup(line), 1))){
+        char * t2 = strdup(line);
+        char * y = getfield(t2, 2);
         printf("%s\n",y);
         int x = atoi(y);
         printf("Successful comparison: %s has rating %d\n",p->username,x);
         p->rating=x;
+        free(t2);
       };
-      free(tmp);
+      free(t1);
   }
   //close(stream);
 }
