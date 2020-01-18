@@ -296,13 +296,19 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           write(players[k].socket, buffer, sizeof(buffer));
         }
         for(i=0;i<numPlayers;i++){
-          strncpy(endMsg, "The game has ended", sizeof(endMsg));
+          strncpy(endMsg, "The game has ended. Here are the final standings:", sizeof(endMsg));
+          write(players[i].socket, endMsg, sizeof(endMsg));
+          strcpy(endMsg,printPlayers(players,numPlayers));
+          write(players[i].socket, endMsg, sizeof(endMsg));
+          strcpy(endMsg,"Thanks for playing! ");
           write(players[i].socket, endMsg, sizeof(endMsg));
         }
-      }
-      else{
         break;
       }
+
+      }
+      if(endCounter){
+        break;
       }
     }
 }

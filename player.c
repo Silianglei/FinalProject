@@ -101,11 +101,15 @@ int main(int argc, char **argv) {
       if (!strcmp(buffer, "clear ")) {
         runCommand(1,1,buffer);
       }
+
       else {
       printf("\r %s \n", buffer);
       //the above printf does not have \n
       //flush the buffer to immediately print
       fflush(stdout);
+      }
+      if (!strcmp(buffer, "Thanks for playing! ")) {
+        return 0;
       }
     }//end socket select
 
