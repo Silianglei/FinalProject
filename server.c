@@ -212,9 +212,22 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
         if(len) {
           read(client_socket, buffer, sizeof(buffer));
           if(strcmp(buffer,questions[questionIndex].correctAnswer)){
+            int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+            char data[200];
+            sprintf(data, "%s incorrectly answered %s\n", players[i].username, buffer);
+            write(gameSum, data, strlen(data));
+            close(gameSum);
+
             numIdiots++;
             int j;
             if(numIdiots>=numPlayers){
+
+              int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+              char data[200];
+              sprintf(data, "The correct answer is: %s\n", questions[questionIndex].correctAnswer);
+              write(gameSum, data, strlen(data));
+              close(gameSum);
+
               int k;
               strncpy(buffer, "Everyone got it wrong, y'all stupid.", sizeof(buffer));
               write(client_socket,buffer,sizeof(buffer));
@@ -239,26 +252,32 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
               }
 
               questionIndex = rand() % numQuestions;
+
+              gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+              char aQuestion[BUFFER_SIZE];
+              strncpy(aQuestion, questions[questionIndex].problemText, sizeof(aQuestion));
+              sprintf(data, "\nQuestion: %s\n", aQuestion);
+              write(gameSum, data, strlen(data));
+              close(gameSum);
+
               for(j = 0; j<numPlayers; j ++){
                 strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
                 write(players[j].socket, buffer, sizeof(buffer));
               }
               numIdiots = 0;
             }
-            else{
-
-              int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
-              char data[200];
-              sprintf(data, "\n%s incorrectly answered %s\n", players[i].username, buffer);
-              write(gameSum, data, strlen(data));
-              close(gameSum);
-
+            else {
               strncpy(buffer, "You got it wrong. Wait for the round to end.", sizeof(buffer));
               write(client_socket,buffer,sizeof(buffer));
             }
 
           }
           else{
+            int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+            char data[200];
+            sprintf(data, "%s correctly answered %s\n", players[i].username, buffer);
+            write(gameSum, data, strlen(data));
+            close(gameSum);
             players[i].score = players[i].score + questions[questionIndex].points;
 
             numIdiots = 0;
@@ -303,6 +322,12 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
               write(players[j].socket, buffer, sizeof(buffer));
             }
 
+            gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+            char aQuestion[BUFFER_SIZE];
+            strncpy(aQuestion, questions[questionIndex].problemText, sizeof(aQuestion));
+            sprintf(data, "\nQuestion: %s\n", aQuestion);
+            write(gameSum, data, strlen(data));
+            close(gameSum);
 
             for(j = 0; j<numPlayers; j ++){
               strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
