@@ -291,12 +291,22 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
         endCounter = 1;
         int k;
         char buffer[BUFFER_SIZE];
+        int ratingSum = 0;
         for(k = 0; k<numPlayers; k ++){
           strncpy(buffer, "clear ", sizeof(buffer));
           write(players[k].socket, buffer, sizeof(buffer));
+          ratingSum+=players[k].rating;
         }
         for(i=0;i<numPlayers;i++){
-          players[i].rating+=players[i].score;
+          if(numPlayers>1){
+            int place = placed(players,numPlayers,&players[i]);
+            printf("Place: %d\n",place);
+            int performanceRating = (ratingSum-players[i].rating+400*(numPlayers-place)-400*(place-1))/(numPlayers-1);
+            printf("P rating: %d\n",performanceRating);
+            players[i].rating=(9*players[i].rating+performanceRating+5)/10;
+          }
+        }
+        for(i=0;i<numPlayers;i++){  
           updateRatings(&players[i]);
           strncpy(endMsg, "The game has ended. Here are the final standings:", sizeof(endMsg));
           write(players[i].socket, endMsg, sizeof(endMsg));

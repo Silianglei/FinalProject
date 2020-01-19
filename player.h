@@ -58,6 +58,17 @@ void lookUp(struct Player * p) {
   }
 }
 
+int placed(struct Player * players, int numPlayers, struct Player * p){
+  int place = 1;
+  int i;
+  for(i = 0; i < numPlayers; i ++){
+    if(players[i].rating>p->rating){
+      place++;
+    }
+  }
+  return place;
+}
+
 void updateRatings(struct Player * p) {
   char buffer[256];
   FILE* pFile = fopen("players.csv", "a");
