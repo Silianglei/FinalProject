@@ -74,6 +74,9 @@ int main() {
   struct Player * players = malloc(numPlayers * sizeof(struct Player));
   listen_socket = server_setup();
 
+  int gameSum = open("summary.txt",  O_CREAT | O_TRUNC | O_RDWR, 0644);
+  close(gameSum);
+
   int file = open("question.csv", O_RDONLY);
   char text[1000];
   text[0] = '\0';
@@ -151,6 +154,12 @@ void getUser(struct Player *player) {
       read(player->socket, buffer, sizeof(buffer));
       strcpy(player->username,buffer);
 
+      int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+      char data[100];
+      sprintf(data, "%s entered the game\n", buffer);
+      write(gameSum, data, strlen(data));
+      close(gameSum);
+
       lookUp(player);
       printf("%s\n",player->username);
       printf("%d\n",player->rating);
@@ -169,7 +178,16 @@ void readyMsg(int client_socket) {
 void game(struct Player * players, int numPlayers, struct Question questions[], int numQuestions) {
   srand(time(0));
   int i;
-  int questionIndex = rand() % numQuestions;;
+  int questionIndex = rand() % numQuestions;
+
+  int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+  char aQuestion[BUFFER_SIZE];
+  strncpy(aQuestion, questions[questionIndex].problemText, sizeof(aQuestion));
+  char data[200];
+  sprintf(data, "\nQuestion: %s\n", aQuestion);
+  write(gameSum, data, strlen(data));
+  close(gameSum);
+
   for(i=0;i<numPlayers;i++){
     char buffer[BUFFER_SIZE];
     // int client_socket=client_sockets[i];
@@ -228,6 +246,13 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
               numIdiots = 0;
             }
             else{
+
+              int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+              char data[200];
+              sprintf(data, "\n%s incorrectly answered %s\n", players[i].username, buffer);
+              write(gameSum, data, strlen(data));
+              close(gameSum);
+
               strncpy(buffer, "You got it wrong. Wait for the round to end.", sizeof(buffer));
               write(client_socket,buffer,sizeof(buffer));
             }
@@ -306,7 +331,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
             players[i].rating=(9*players[i].rating+performanceRating+5)/10;
           }
         }
-        for(i=0;i<numPlayers;i++){  
+        for(i=0;i<numPlayers;i++){
           updateRatings(&players[i]);
           strncpy(endMsg, "The game has ended. Here are the final standings:", sizeof(endMsg));
           write(players[i].socket, endMsg, sizeof(endMsg));
