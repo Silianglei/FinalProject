@@ -276,7 +276,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           }
           else{
             int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
-            char data[512];
+            char data[1024];
             sprintf(data, "%s correctly answered %s\n", players[i].username, buffer);
             write(gameSum, data, strlen(data));
             close(gameSum);
