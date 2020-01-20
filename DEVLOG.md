@@ -44,5 +44,8 @@ Added rating system into game, added to README.md
 ### 1/19/20 (Contributors: Akash)
 Added game summary
 
-### 1/20/20 (Contributors: Mario)
+### 1/20/20 (Contributors: Mario, Akash)
 Printed game summary at end of game
+
+### 1/20/20 (Contributors: Si Liang)
+Made Dev Log
