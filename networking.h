@@ -13,7 +13,7 @@
 #define NETWORKING_H
 
 #define BUFFER_SIZE 10000
-#define PORT "64230"
+#define PORT "64231"
 #define TEST_IP "127.0.0.1"
 
 void error_check(int i, char *s);

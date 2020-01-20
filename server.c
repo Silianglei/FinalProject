@@ -379,7 +379,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           strcpy(endMsg,"Thanks for playing! ");
           write(players[i].socket, endMsg, sizeof(endMsg));
         }
-        delay(1);
+        delay(1000);
         remove("summary.txt");
 
         break;
