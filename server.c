@@ -37,6 +37,8 @@ void delay(int numSec){
     ;
 }
 
+
+
 char * printPlayers(struct Player * playerRankings, int numPlayers) {
   sortPlayer(playerRankings, numPlayers);
   char * total = malloc(50*(numPlayers+1));
@@ -322,12 +324,15 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
               write(players[j].socket, buffer, sizeof(buffer));
             }
 
-            gameSum = open("summary.txt", O_WRONLY | O_APPEND);
-            char aQuestion[BUFFER_SIZE];
-            strncpy(aQuestion, questions[questionIndex].problemText, sizeof(aQuestion));
-            sprintf(data, "\nQuestion: %s\n", aQuestion);
-            write(gameSum, data, strlen(data));
-            close(gameSum);
+            if (players[i].score < 10){
+
+              gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+              char aQuestion[BUFFER_SIZE];
+              strncpy(aQuestion, questions[questionIndex].problemText, sizeof(aQuestion));
+              sprintf(data, "\nQuestion: %s\n", aQuestion);
+              write(gameSum, data, strlen(data));
+              close(gameSum);
+            }
 
             for(j = 0; j<numPlayers; j ++){
               strncpy(buffer, questions[questionIndex].problemText, sizeof(buffer));
@@ -347,13 +352,14 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           write(players[k].socket, buffer, sizeof(buffer));
           ratingSum+=players[k].rating;
         }
-        for(i=0;i<numPlayers;i++){
+        int l;
+        for(l=0;l<numPlayers;l++){
           if(numPlayers>1){
-            int place = placed(players,numPlayers,&players[i]);
+            int place = placed(players,numPlayers,&players[l]);
             printf("Place: %d\n",place);
-            int performanceRating = (ratingSum-players[i].rating+400*(numPlayers-place)-400*(place-1))/(numPlayers-1);
+            int performanceRating = (ratingSum-players[l].rating+400*(numPlayers-place)-400*(place-1))/(numPlayers-1);
             printf("P rating: %d\n",performanceRating);
-            players[i].rating=(9*players[i].rating+performanceRating+5)/10;
+            players[l].rating=(9*players[l].rating+performanceRating+5)/10;
           }
         }
         for(i=0;i<numPlayers;i++){
@@ -362,9 +368,20 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           write(players[i].socket, endMsg, sizeof(endMsg));
           strcpy(endMsg,printPlayers(players,numPlayers));
           write(players[i].socket, endMsg, sizeof(endMsg));
+        }
+        int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
+        char data[300];
+
+        sprintf(data, "Final rankings:\n%s",printPlayers(players,numPlayers));
+        write(gameSum, data, strlen(data));
+        close(gameSum);
+        for(i=0;i<numPlayers;i++){
           strcpy(endMsg,"Thanks for playing! ");
           write(players[i].socket, endMsg, sizeof(endMsg));
         }
+        delay(1);
+        remove("summary.txt");
+
         break;
       }
 

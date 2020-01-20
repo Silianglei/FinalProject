@@ -62,7 +62,7 @@ int placed(struct Player * players, int numPlayers, struct Player * p){
   int place = 1;
   int i;
   for(i = 0; i < numPlayers; i ++){
-    if(players[i].rating>p->rating){
+    if(players[i].score>p->score){
       place++;
     }
   }
