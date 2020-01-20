@@ -276,7 +276,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           }
           else{
             int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
-            char data[200];
+            char data[512];
             sprintf(data, "%s correctly answered %s\n", players[i].username, buffer);
             write(gameSum, data, strlen(data));
             close(gameSum);
@@ -370,7 +370,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           write(players[i].socket, endMsg, sizeof(endMsg));
         }
         int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
-        char data[300];
+        char data[512];
 
         sprintf(data, "Final rankings:\n%s",printPlayers(players,numPlayers));
         write(gameSum, data, strlen(data));

@@ -70,7 +70,7 @@ int placed(struct Player * players, int numPlayers, struct Player * p){
 }
 
 void updateRatings(struct Player * p) {
-  char buffer[512];
+  char buffer[1024];
   FILE* pFile = fopen("players.csv", "a");
   sprintf(buffer,"%s,%d \n",p->username,p->rating);
   fprintf(pFile, "%s", buffer);
