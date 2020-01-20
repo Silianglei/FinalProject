@@ -215,7 +215,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
           read(client_socket, buffer, sizeof(buffer));
           if(strcmp(buffer,questions[questionIndex].correctAnswer)){
             int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
-            char data[200];
+            char data[535];
             sprintf(data, "%s incorrectly answered %s\n", players[i].username, buffer);
             write(gameSum, data, strlen(data));
             close(gameSum);
