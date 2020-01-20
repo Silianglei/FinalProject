@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
       fflush(stdout);
       }
       if (!strcmp(buffer, "Thanks for playing! ")) {
-        printf("GAME SUMMARY: \n")
+        printf("GAME SUMMARY: \n");
         char com[20] = "cat summary.txt ";
         runCommand(1,1,com);
         return 0;
