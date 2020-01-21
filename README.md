@@ -7,7 +7,7 @@
 
 
 ## Description
-For The Win is a game in which multiple people compete to solve math problems as fast as they can. There is a timer set for 45 seconds, and a math problem is projected on the player’s screens. The players have to compute the answer as fast as possible and enter in their answer. The round ends when a player answers a question correctly, when all players have answered incorrectly, or when the timer ends. The first players to have three correct answers wins. If time allows we may create an elo system where users can improve their rating over time.
+For The Win is a game in which multiple people compete to solve math problems as fast as they can. Each round, the screen will clear and a new math problem is projected on the player’s screens. The players have to compute the answer as fast as possible and enter in their answer. The round ends when a player answers a question correctly, or when all players have answered incorrectly. The first players to have 10 points. If time allows we may create an elo system where users can improve their rating over time.
 
 
 
@@ -20,9 +20,9 @@ For The Win is a game in which multiple people compete to solve math problems as
 6. The round is over when one player gets the correct answer or nobody gets the correct answer.
 7. At the end of each round, players can see the current rankings as well as who solved the question correctly.
 
-## Bugs (Right Now)
+## Bugs
 1. Sometimes, after a round, the message that says who solved the question is displayed twice.
-2. If a Player2 answers a question within 3 seconds of Player1 getting the same question correct, then Player2 automatically gets the next question wrong.
+2. If  Player 2 answers a question within 3 seconds of Player 1 getting the same question correct, then Player 2 automatically gets the next question wrong.
 
 ## Libraries Required:
 1. ```#include <stdio.h>```
