@@ -376,8 +376,10 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
         sprintf(data, "Final rankings:\n%s",printPlayers(players,numPlayers));
         write(gameSum, data, strlen(data));
         close(gameSum);
-
-        printf("GAME SUMMARY: \n");
+        char glrgh[10];
+        strcpy(glrgh,"clear ");
+        runCommand(1,1,glrgh);
+        printf("\n\nGAME SUMMARY: \n");
         char blagh[50];
         strcpy(blagh,"cat summary.txt ");
         runCommand(1,1,blagh);
