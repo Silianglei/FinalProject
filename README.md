@@ -24,6 +24,7 @@ For The Win is a game in which multiple people compete to solve math problems as
 ## Bugs
 1. Sometimes, after a round, the message that says who solved the question is displayed twice.
 2. If  Player 2 answers a question within 3 seconds of Player 1 getting the same question correct, then Player 2 automatically gets the next question wrong.
+3. After the game is over, one extra question is printed in the game summary (for extra practice, not really a bug).
 
 ## Libraries Required:
 1. ```#include <stdio.h>```
