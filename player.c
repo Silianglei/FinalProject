@@ -1,42 +1,12 @@
 #include "player.h"
 #include "networking.h"
-#include<sys/wait.h>
+
 
 char ** parse_args( char * line, char * delimeter);
 
 void runCommand(int j, int k, char input[]);
 
-char ** parse_args( char * line, char * delimeter){
-  char *current = line;
-  char *token;
-  char ** args = malloc(10 * sizeof(char*));
-  int i = 0;
-  while(current != NULL){
-    args[i] = strsep(&current, delimeter);
-    if (i > 0 && strcmp(";", delimeter) == 0) {
-      args[i]++;
-    }
-    i++;
-  }
-  args[i] = NULL;
-  return args;
-}
 
-//Given two integers and a command seperated by spaces, runCommand executes the command through
-//parsing and execvp
-void runCommand(int j, int k, char input[]){
-  input[strlen(input)-1] = 0;
-  char * line = input;
-  char ** args = parse_args(line, " ");
-
-  k = fork();
-  if(k==0) {
-    //execvp(args[0], args);
-    if (execvp(args[0], args) == -1)
-				exit(-1);
-  }
-  wait(&j);
-}
 void increaseScore(struct Player * p, int increase){
   p->score = p->score + increase;
 }
@@ -113,7 +83,7 @@ int main(int argc, char **argv) {
       fflush(stdout);
       }
       }
-      if (!strcmp(buffer, "Thanks for playing! ")) {
+      if (!strcmp(buffer, "Thanks for playing! See the game summary in the server ")) {
 
         // char com[20] = "cat summary.txt ";
         // runCommand(1,1,com);

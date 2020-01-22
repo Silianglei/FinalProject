@@ -213,7 +213,7 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
         int io = ioctl(client_socket, FIONREAD, &len); //checks if stuff to read exists
 
         if(0<len) {
-          printf("%d\n",len);
+          //printf("%d\n",len);
           read(client_socket, buffer, sizeof(buffer));
           if(strcmp(buffer,questions[questionIndex].correctAnswer)){
             int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
@@ -377,39 +377,14 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
         write(gameSum, data, strlen(data));
         close(gameSum);
 
-        for(i=0;i<numPlayers;i++){
-          strcpy(endMsg,"GAME SUMMARY: ");
-          write(players[i].socket, endMsg, sizeof(endMsg));
-        }
-        for(i=0;i<numPlayers;i++){
-          FILE *fp1;
-         /* Character variable to read the content of file */
-          char c;
-
-         /* Opening a file in r mode*/
-          fp1= fopen ("summary.txt", "r");
-
-         /* Infinite loop –I have used break to come out of the loop*/
-          while(1)
-          {
-            c = fgetc(fp1);
-            char k[2];
-            if(c==EOF)
-                break;
-             else
-                printf("%c",c);
-                k[0]=c;
-                k[1]='\0';
-                write(players[i].socket,k,sizeof(c));
-                //write(players[i].socket,"\b", sizeof(c));
-          }
-          fclose(fp1);
-
-        }
+        printf("GAME SUMMARY: \n");
+        char blagh[50];
+        strcpy(blagh,"cat summary.txt ");
+        runCommand(1,1,blagh);
         delay(1000);
         remove("summary.txt");
         for(i=0;i<numPlayers;i++){
-          strcpy(endMsg,"Thanks for playing! ");
+          strcpy(endMsg,"Thanks for playing! See the game summary in the server ");
           write(players[i].socket, endMsg, sizeof(endMsg));
         }
 
