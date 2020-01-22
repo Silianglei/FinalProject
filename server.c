@@ -375,12 +375,42 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
         sprintf(data, "Final rankings:\n%s",printPlayers(players,numPlayers));
         write(gameSum, data, strlen(data));
         close(gameSum);
+
+        for(i=0;i<numPlayers;i++){
+          strcpy(endMsg,"GAME SUMMARY: ");
+          write(players[i].socket, endMsg, sizeof(endMsg));
+        }
+        for(i=0;i<numPlayers;i++){
+          FILE *fp1;
+         /* Character variable to read the content of file */
+          char c;
+
+         /* Opening a file in r mode*/
+          fp1= fopen ("summary.txt", "r");
+
+         /* Infinite loop –I have used break to come out of the loop*/
+          while(1)
+          {
+            c = fgetc(fp1);
+            char k[2];
+            if(c==EOF)
+                break;
+             else
+                printf("%c",c);
+                k[0]=c;
+                k[1]='\0';
+                write(players[i].socket,k,sizeof(c));
+                //write(players[i].socket,"\b", sizeof(c));
+          }
+          fclose(fp1);
+
+        }
+        delay(1000);
+        remove("summary.txt");
         for(i=0;i<numPlayers;i++){
           strcpy(endMsg,"Thanks for playing! ");
           write(players[i].socket, endMsg, sizeof(endMsg));
         }
-        delay(1000);
-        remove("summary.txt");
 
         break;
       }

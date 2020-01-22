@@ -48,9 +48,9 @@ void lookUp(struct Player * p) {
       if(!strcmp(p->username,getfield(strdup(line), 1))){
         char * t2 = strdup(line);
         char * y = getfield(t2, 2);
-        printf("%s\n",y);
+        //printf("%s\n",y);
         int x = atoi(y);
-        printf("Successful comparison: %s has rating %d\n",p->username,x);
+        //printf("Successful comparison: %s has rating %d\n",p->username,x);
         p->rating=x;
         free(t2);
       };
