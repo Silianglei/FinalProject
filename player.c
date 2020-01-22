@@ -87,10 +87,13 @@ int main(int argc, char **argv) {
 
     if (FD_ISSET(STDIN_FILENO, &read_fds)) {
       fgets(buffer, sizeof(buffer), stdin);
-      *strchr(buffer, '\n') = 0;
-      write(server_socket, buffer, sizeof(buffer));
-      read(server_socket, buffer, sizeof(buffer));
-      printf("%s\n", buffer);
+      if(strlen(buffer)){
+        *strchr(buffer, '\n') = 0;
+        write(server_socket, buffer, sizeof(buffer));
+        read(server_socket, buffer, sizeof(buffer));
+        printf("%s\n", buffer);
+      }
+
     }//end stdin select
 
     //currently the server is not set up to
@@ -103,13 +106,15 @@ int main(int argc, char **argv) {
       }
 
       else {
+      if(strlen(buffer)){
       printf("\r %s \n", buffer);
       //the above printf does not have \n
       //flush the buffer to immediately print
       fflush(stdout);
       }
+      }
       if (!strcmp(buffer, "Thanks for playing! ")) {
-        
+
         // char com[20] = "cat summary.txt ";
         // runCommand(1,1,com);
         return 0;

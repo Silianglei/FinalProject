@@ -12,7 +12,7 @@
 #ifndef NETWORKING_H
 #define NETWORKING_H
 
-#define BUFFER_SIZE 10000
+#define BUFFER_SIZE 1000
 #define PORT "64231"
 #define TEST_IP "127.0.0.1"
 

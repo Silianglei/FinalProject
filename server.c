@@ -210,8 +210,10 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
         char buffer[BUFFER_SIZE];
         int client_socket=players[i].socket;
         int len = 0;
-        ioctl(client_socket, FIONREAD, &len); //checks if stuff to read exists
-        if(len) {
+        int io = ioctl(client_socket, FIONREAD, &len); //checks if stuff to read exists
+
+        if(0<len) {
+          printf("%d\n",len);
           read(client_socket, buffer, sizeof(buffer));
           if(strcmp(buffer,questions[questionIndex].correctAnswer)){
             int gameSum = open("summary.txt", O_WRONLY | O_APPEND);
@@ -308,10 +310,9 @@ void game(struct Player * players, int numPlayers, struct Question questions[], 
             for(k = 3 ;  k>0 ; k--){
 
               char waitMessage[100];
-              sprintf(waitMessage, "\b\r%d seconds until the next round begins", k);
-              if(k==3){
-                sprintf(waitMessage, "\r%d seconds until the next round begins", k);
-              }
+
+              sprintf(waitMessage, "%d seconds until the next round begins", k);
+
               for(j=0;j<numPlayers;j++){
                 strncpy(buffer, waitMessage, sizeof(buffer));
                 write(players[j].socket, buffer, sizeof(buffer));
